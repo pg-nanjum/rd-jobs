@@ -20,6 +20,6 @@
         <exec>echo ${option.opt1}</exec>
       </command>
     </sequence>
-    <uuid>f8305b1d-7d72-4d0f-8dc7-581149ebd566</uuid>
+    <uuid></uuid>
   </job>
 </joblist>
