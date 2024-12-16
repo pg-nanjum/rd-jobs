@@ -1,0 +1,40 @@
+<joblist>
+  <job>
+    <defaultTab>nodes</defaultTab>
+    <description></description>
+    <executionEnabled>true</executionEnabled>
+    <id>7e91ff5d-f51d-4cfb-9045-031ae3dd7e88</id>
+    <loglevel>INFO</loglevel>
+    <name>passing_Variables_between_Steps</name>
+    <nodeFilterEditable>false</nodeFilterEditable>
+    <plugins />
+    <scheduleEnabled>true</scheduleEnabled>
+    <schedules />
+    <sequence keepgoing='false' strategy='node-first'>
+      <command>
+        <exec>hostname</exec>
+        <plugins />
+      </command>
+      <command>
+        <exec>echo ${data.var1*}</exec>
+      </command>
+      <command>
+        <jobref name='test' nodeStep='true'>
+          <arg line='-opt1 ${data.var1}' />
+          <uuid>f8305b1d-7d72-4d0f-8dc7-581149ebd566</uuid>
+        </jobref>
+      </command>
+      <pluginConfig>
+        <LogFilter type='key-value-data'>
+          <config>
+            <invalidKeyPattern>\s|\$|\{|\}|\\</invalidKeyPattern>
+            <logData>false</logData>
+            <name>var1</name>
+            <regex>\s*(.+)$</regex>
+          </config>
+        </LogFilter>
+      </pluginConfig>
+    </sequence>
+    <uuid>7e91ff5d-f51d-4cfb-9045-031ae3dd7e88</uuid>
+  </job>
+</joblist>
