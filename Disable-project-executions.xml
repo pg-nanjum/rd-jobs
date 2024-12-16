@@ -74,6 +74,6 @@ for (( i=0; i<${#projects[@]}; i++ ))
         <scriptargs />
       </command>
     </sequence>
-    <uuid>e825c65f-5828-4d6f-9608-85fb16c402b0</uuid>
+    <uuid></uuid>
   </job>
 </joblist>
