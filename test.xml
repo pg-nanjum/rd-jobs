@@ -10,7 +10,7 @@
     <executionEnabled>true</executionEnabled>
     <id>f8305b1d-7d72-4d0f-8dc7-581149ebd566</id>
     <loglevel>INFO</loglevel>
-    <name>test4</name>
+    <name>test5</name>
     <nodeFilterEditable>false</nodeFilterEditable>
     <plugins />
     <scheduleEnabled>true</scheduleEnabled>
