@@ -1,0 +1,31 @@
+<joblist>
+  <job>
+    <defaultTab>nodes</defaultTab>
+    <description></description>
+    <executionEnabled>true</executionEnabled>
+    <id>35cc6e2e-f83a-4179-b2a5-8df02aab4130</id>
+    <loglevel>INFO</loglevel>
+    <name>sleep60s</name>
+    <nodeFilterEditable>false</nodeFilterEditable>
+    <plugins />
+    <runnerSelector>
+      <filter>LC</filter>
+      <runnerFilterMode>TAGS</runnerFilterMode>
+      <runnerFilterType>TAG_FILTER_AND</runnerFilterType>
+    </runnerSelector>
+    <scheduleEnabled>true</scheduleEnabled>
+    <schedules />
+    <sequence keepgoing='false' strategy='node-first'>
+      <command>
+        <node-step-plugin type='nixy-waitfor-sleep-workflow-node-step'>
+          <configuration>
+            <entry key='cycles' value='60' />
+            <entry key='interval' value='1s' />
+            <entry key='progress' value='false' />
+          </configuration>
+        </node-step-plugin>
+      </command>
+    </sequence>
+    <uuid>35cc6e2e-f83a-4179-b2a5-8df02aab4130</uuid>
+  </job>
+</joblist>
