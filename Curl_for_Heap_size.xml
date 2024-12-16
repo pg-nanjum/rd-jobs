@@ -42,6 +42,6 @@ echo "$tStamp : Active Threads Percent: $active_Threads_percent"
         <scriptargs />
       </command>
     </sequence>
-    <uuid>6f6f7764-724b-4c3a-8e18-cd05bb9a88c0</uuid>
+    <uuid></uuid>
   </job>
 </joblist>
