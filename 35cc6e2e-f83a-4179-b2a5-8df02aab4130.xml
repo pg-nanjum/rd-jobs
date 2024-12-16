@@ -5,7 +5,7 @@
     <executionEnabled>true</executionEnabled>
     <id>35cc6e2e-f83a-4179-b2a5-8df02aab4130</id>
     <loglevel>INFO</loglevel>
-    <name>sleep6000s</name>
+    <name>sleep60000s</name>
     <nodeFilterEditable>false</nodeFilterEditable>
     <plugins />
     <runnerSelector>
