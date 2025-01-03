@@ -63,6 +63,6 @@ for project in $(curl -s --location --request GET "$RD_OPTION_URL/api/21/project
         <scriptargs />
       </command>
     </sequence>
-    <uuid></uuid>
+    <uuid>4363e45d-0cc1-4a9e-b8b4-dd89033da375</uuid>
   </job>
 </joblist>
