@@ -5,7 +5,7 @@
     <executionEnabled>true</executionEnabled>
     <id>fc2e23b6-6c85-43a6-b102-4743974eee5f</id>
     <loglevel>INFO</loglevel>
-    <name>passing_Variables_between_Steps2222</name>
+    <name>passing_Variables_between_Steps</name>
     <nodeFilterEditable>false</nodeFilterEditable>
     <plugins />
     <scheduleEnabled>true</scheduleEnabled>
