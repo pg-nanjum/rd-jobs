@@ -3,7 +3,7 @@
     <defaultTab>nodes</defaultTab>
     <description></description>
     <executionEnabled>true</executionEnabled>
-    <id>7e91ff5d-f51d-4cfb-9045-031ae3dd7e88</id>
+    <id>a8a28bd1-9714-48a4-b9f9-46bd09df5ca5</id>
     <loglevel>INFO</loglevel>
     <name>passing_Variables_between_Steps</name>
     <nodeFilterEditable>false</nodeFilterEditable>
@@ -13,7 +13,6 @@
     <sequence keepgoing='false' strategy='node-first'>
       <command>
         <exec>hostname</exec>
-        <plugins />
       </command>
       <command>
         <exec>echo ${data.var1*}</exec>
@@ -35,6 +34,6 @@
         </LogFilter>
       </pluginConfig>
     </sequence>
-    <uuid>fc2e23b6-6c85-43a6-b102-4743974eee5f</uuid>
+    <uuid>a8a28bd1-9714-48a4-b9f9-46bd09df5ca5</uuid>
   </job>
 </joblist>

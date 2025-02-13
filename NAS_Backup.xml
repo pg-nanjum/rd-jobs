@@ -1,0 +1,50 @@
+<joblist>
+  <job>
+    <context>
+      <options preserveOrder='true'>
+        <option name='password' required='true' secure='true' storagePath='keys/passwords/popso/srv-noc' valueExposed='true'>
+          <hidden>true</hidden>
+        </option>
+      </options>
+    </context>
+    <defaultTab>nodes</defaultTab>
+    <description></description>
+    <dispatch>
+      <excludePrecedence>true</excludePrecedence>
+      <keepgoing>false</keepgoing>
+      <rankOrder>ascending</rankOrder>
+      <successOnEmptyNodeFilter>false</successOnEmptyNodeFilter>
+      <threadcount>1</threadcount>
+    </dispatch>
+    <executionEnabled>true</executionEnabled>
+    <group>NetApp</group>
+    <id>4319b7da-3f7c-448f-875f-ebdfd0d4b18e</id>
+    <loglevel>INFO</loglevel>
+    <name>NAS Backup</name>
+    <nodeFilterEditable>false</nodeFilterEditable>
+    <nodefilters>
+      <filter>slr1595.popso.it</filter>
+    </nodefilters>
+    <nodesSelectedByDefault>true</nodesSelectedByDefault>
+    <plugins />
+    <scheduleEnabled>true</scheduleEnabled>
+    <schedules />
+    <sequence keepgoing='false' strategy='node-first'>
+      <command>
+        <node-step-plugin type='com.batix.rundeck.plugins.AnsiblePlaybookInlineWorkflowNodeStep'>
+          <configuration>
+            <entry key='ansible-base-dir-path' value='/root/netapp/backup' />
+            <entry key='ansible-become' value='false' />
+            <entry key='ansible-binaries-dir-path' value='/usr/local/bin' />
+            <entry key='ansible-encrypt-extra-vars' value='false' />
+            <entry key='ansible-playbook-inline' value='---&#10;# Versione 1.0&#10;# 24/10/2024&#10;&#10;- hosts: localhost&#10;  name: Ansible - Configurazione Backup environment&#10;  no_log: false&#10;  collections:&#10;    - netapp.ontap&#10;&#10;  #vars_prompt:&#10;  #  - name: "username"&#10;  #    prompt: "Username per accesso allo storage"&#10;  #    private: no&#10;  #  - name: "password"&#10;  #    prompt: "Enter Password"&#10;  #    private: yes&#10;&#10;  vars_files:&#10;    - "vars/vars_backup.yaml"  #inserire in questo file i parametri per effettuaree il backup dei volumi&#10;&#10;&#10;  vars:&#10;    login: &amp;login&#10;      hostname: "{{ cluster.ip }}"&#10;      username: "POPSO\srv-noc"&#10;      password: "${unquotedoption.password}"&#10;      https: true&#10;      validate_certs: false&#10;    vserver: "{{ svm.name }}" # inserito nel file dei parametri, nome del vserver da usare per il backup dei volumi&#10;    volname_append_testdr: "_backup"  #suffisso da aggiungere al nome volume da clonare&#10;    svm_dr_list: "{{ drsvm }}"  # inserito nel file dei parametri, elenco dei vserver da cui clonare i volumi&#10;    global_ep_policy: "{{ svm.ep_policy }}" # inserito nel file dei parametri, nome della export-policy da usare per tutti i volumi clonati&#10;&#10;&#10;  tasks:&#10;&#10;    - name: Acquisizione informazioni dei vserver DR - Elenco dei volumi esistenti&#10;      netapp.ontap.na_ontap_rest_info:&#10;        &lt;&lt;: *login&#10;        gather_subset:&#10;          - storage/volumes&#10;        parameters:&#10;          name: "!*root"&#10;          state: online&#10;        fields:&#10;          - &apos;name&apos;&#10;          - &apos;svm.name&apos;&#10;          #- &apos;*&apos;&#10;      register: vol_dr_list&#10;&#10;    - name: Acquisizione informazioni dei vserver DR - snapshots disponibili&#10;      #Retrieve Snapshots info using ONTAP info module&#10;      netapp.ontap.na_ontap_rest_info:&#10;        &lt;&lt;: *login&#10;        gather_subset:&#10;          - storage/volumes/snapshots&#10;        fields:&#10;          - &apos;snapmirror_label&apos;&#10;          - &apos;name&apos;&#10;          - &apos;create_time&apos;&#10;          - &apos;volume.name&apos;&#10;          - &apos;svm.name&apos;&#10;          #- &apos;*&apos;&#10;        parameters:&#10;        owning_resource:&#10;          volume_name: "{{ volume_item.name }}"&#10;          svm_name: "{{ volume_item.svm.name }}"&#10;      register: snap_dr_list&#10;      loop: "{{vol_dr_list.ontap_info[&apos;storage/volumes&apos;].records  }}"&#10;      loop_control:&#10;        loop_var: volume_item&#10;      when: "volume_item.svm.name in svm_dr_list"&#10;&#10;    - name: "Clonazione dei volumi esistenti"&#10;      na_ontap_volume_clone:&#10;        state: present&#10;        use_rest: always&#10;        vserver: "{{ vserver }}"&#10;        parent_volume: "{{ item.ontap_info[&apos;storage/volumes/snapshots&apos;].records[-1].volume.name }}"&#10;        parent_vserver: "{{ item.ontap_info[&apos;storage/volumes/snapshots&apos;].records[-1].svm.name }}"&#10;        name:  "{{ item.ontap_info[&apos;storage/volumes/snapshots&apos;].records[-1].volume.name }}{{ volname_append_testdr }}"&#10;        parent_snapshot: "{{ item.ontap_info[&apos;storage/volumes/snapshots&apos;].records[-1].name }}"&#10;&#10;        &lt;&lt;: *login&#10;      loop: "{{ snap_dr_list.results }}"&#10;      when: item.ontap_info[&apos;storage/volumes/snapshots&apos;] is defined&#10;&#10;    - name: "Mount dei volumi clonati "&#10;      na_ontap_volume:&#10;        state: present&#10;        use_rest: always&#10;        vserver: "{{ vserver }}"&#10;        name:  "{{ item.ontap_info[&apos;storage/volumes/snapshots&apos;].records[-1].volume.name }}{{ volname_append_testdr }}"&#10;        junction_path: "/{{ item.ontap_info[&apos;storage/volumes/snapshots&apos;].records[-1].volume.name }}" #DA DEFINIRE!!!!&#10;        export_policy: "{{ global_ep_policy }}"&#10;        &lt;&lt;: *login&#10;      loop: "{{ snap_dr_list.results }}"&#10;      when: item.ontap_info[&apos;storage/volumes/snapshots&apos;] is defined&#10;&#10;    - name:  NFS - Abilitazione servizio&#10;      netapp.ontap.na_ontap_nfs:&#10;        state: present&#10;        service_state: started&#10;        vserver: "{{ vserver }}"&#10;        nfsv3: enabled&#10;        nfsv4: enabled&#10;        nfsv41: enabled&#10;        tcp: enabled&#10;        udp: enabled&#10;        vstorage_state: enabled&#10;        nfsv4_id_domain: defaultv4iddomain.com&#10;        &lt;&lt;: *login&#10;&#10;######################################&#10;# https://docs.ansible.com/ansible/latest/collections/netapp/ontap/index.html&#10;############ FOR DEBUG ONLY ##########&#10;' />
+            <entry key='ansible-ssh-auth-type' value='privateKey' />
+            <entry key='ansible-ssh-use-agent' value='false' />
+            <entry key='ansible-ssh-user' value='root' />
+          </configuration>
+        </node-step-plugin>
+      </command>
+    </sequence>
+    <uuid>4319b7da-3f7c-448f-875f-ebdfd0d4b18e</uuid>
+  </job>
+</joblist>
