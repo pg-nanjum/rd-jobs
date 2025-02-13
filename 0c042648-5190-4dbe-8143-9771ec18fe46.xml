@@ -1,0 +1,24 @@
+<joblist>
+  <job>
+    <defaultTab>nodes</defaultTab>
+    <description></description>
+    <executionEnabled>true</executionEnabled>
+    <id>0c042648-5190-4dbe-8143-9771ec18fe46</id>
+    <loglevel>INFO</loglevel>
+    <name>test11</name>
+    <nodeFilterEditable>false</nodeFilterEditable>
+    <plugins />
+    <runnerSelector>
+      <runnerFilterMode>LOCAL</runnerFilterMode>
+      <runnerFilterType>LOCAL_RUNNER</runnerFilterType>
+    </runnerSelector>
+    <scheduleEnabled>true</scheduleEnabled>
+    <schedules />
+    <sequence keepgoing='false' strategy='node-first'>
+      <command>
+        <exec>hostname</exec>
+      </command>
+    </sequence>
+    <uuid>0c042648-5190-4dbe-8143-9771ec18fe46</uuid>
+  </job>
+</joblist>
